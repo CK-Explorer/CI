@@ -37,7 +37,7 @@ jobs:
       run: ruff check .
 
     - name: Run Mypy
-      run: mypy
+      run: mypy package/ tests/
 
     - name: Run Tests
       run: pytest
