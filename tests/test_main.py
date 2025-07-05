@@ -1,5 +1,7 @@
 import pytest
+
 from package.main import addition
+
 
 @pytest.mark.parametrize("a, b, c", [
     (5, 6, 11),
