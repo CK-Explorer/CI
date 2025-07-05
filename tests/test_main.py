@@ -8,5 +8,5 @@ from package.main import addition
     (10, 8, 18),
     (1, 1, 2)
 ])
-def test_addition(a, b, c):
+def test_addition(a: int, b: int, c: int) -> None:
     assert c == addition(a,b)
