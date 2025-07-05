@@ -37,7 +37,7 @@ jobs:
 
       - name: Build CLI Binary
         run: |
-          nuitka cli/main.py --standalone --onefile --output-filename cli_tool
+          nuitka package/main.py --standalone --onefile --output-filename cli_tool
         shell: bash
 
       - name: Rename Binary by OS
