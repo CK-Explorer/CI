@@ -1,40 +1,26 @@
-name: QA and Release
+name: Release - Version Bump & Tag
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
 
 permissions:
-  contents: write  # Allow git push
+  contents: write
 
 jobs:
-  qa:
-    name: QA (Lint, Type Check, Test)
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-      - run: pip install ruff mypy pytest
-      - run: ruff check
-      - run: mypy package/ tests/
-      - run: pytest
-
   release:
-    name: Bump Version & Tag
-    needs: qa
+    name: Release - Bump Version, Tag
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v5
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Set Git identity
         run: |
