@@ -39,6 +39,7 @@ jobs:
       run: pytest
 
     - name: Bump version and changelog
+      id: bump
       run: |
         if cz bump --yes --check-consistency --changelog; then
           echo "bump_succeeded=true" >> $GITHUB_OUTPUT
