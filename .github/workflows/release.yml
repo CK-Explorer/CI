@@ -53,14 +53,6 @@ jobs:
             echo "bump_succeeded=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Confirm tag created
-        if: steps.bump.outputs.bump_succeeded == 'true'
-        run: git tag --sort=-creatordate | tail -n 5
-
-      - name: Pull latest from main (to avoid non-fast-forward)
-        if: steps.bump.outputs.bump_succeeded == 'true'
-        run: git pull --rebase origin main
-
       - name: Push commit and tag
         if: steps.bump.outputs.bump_succeeded == 'true'
         run: |
