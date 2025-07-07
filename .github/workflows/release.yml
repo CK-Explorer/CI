@@ -33,8 +33,9 @@ jobs:
       - name: Run cz bump
         id: bump
         run: |
-          VERSION=$(cz bump --yes --check-consistency --changelog | grep -oP 'bump: version \S+ → \K\S+')
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          VERSION=$(cz bump --yes --check-consistency --changelog | grep -oP 'bump: version \S+ → \K\S+' | tr -d '\r\n')
+          echo "::notice::Raw version='$VERSION'"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
         continue-on-error: false
 
       - name: Create bump branch, commit and push
