@@ -49,6 +49,9 @@ jobs:
           git commit -m "chore(release): bump version to v${VERSION}"
           git push origin "$BRANCH"
 
+      - name: Setup GitHub CLI
+        run: sudo apt install -y gh
+
       - name: Create Pull Request
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
