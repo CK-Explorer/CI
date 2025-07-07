@@ -6,7 +6,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   release:
@@ -18,7 +17,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
@@ -29,44 +27,20 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
 
-      - name: Install Commitizen
+      - name: Install tools
         run: pip install commitizen
 
-      - name: Run cz bump
+      - name: Bump version
         id: bump
         run: |
-          cz bump --yes --check-consistency --changelog --files-only
-          VERSION=$(cz version --project)
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          if cz bump --yes --check-consistency --changelog; then
+            echo "bump_succeeded=true" >> $GITHUB_OUTPUT
+          else
+            echo "bump_succeeded=false" >> $GITHUB_OUTPUT
+          fi
 
-      - name: Create bump branch, commit, and push
-        env:
-          VERSION: ${{ steps.bump.outputs.version }}
+      - name: Push commit and tag
+        if: steps.bump.outputs.bump_succeeded == 'true'
         run: |
-          BRANCH="bump/v${VERSION}"
-          git checkout -b "$BRANCH"
-          git add .
-          git commit -m "chore(release): bump version to v${VERSION}"
-          git push origin "$BRANCH"
-
-      - name: Setup GitHub CLI
-        run: sudo apt install -y gh
-
-      - name: Ensure 'release' label exists
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh label list | grep -q '^release' || \
-          gh label create release --color E99695 --description "Automated release PR"
-
-      - name: Create Pull Request
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ steps.bump.outputs.version }}
-        run: |
-          gh pr create \
-            --title "chore(release): v${VERSION}" \
-            --body "Automated version bump and changelog for v${VERSION}" \
-            --base main \
-            --head "bump/v${VERSION}" \
-            --label release
+          git push origin main
+          git push origin --tags
