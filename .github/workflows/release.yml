@@ -20,8 +20,8 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: pip install ruff mypy pytest
-      - run: ruff my_project tests
-      - run: mypy my_project
+      - run: ruff check
+      - run: mypy package/ tests/
       - run: pytest
 
   release:
