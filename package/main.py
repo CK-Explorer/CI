@@ -12,3 +12,6 @@ def modulus(a: int, b: int) -> int:
 
 def straight_line(a: int, b: int) -> int:
     return a*b + 10
+
+def check_equality(a: int, b: int) -> bool:
+    return a==b
