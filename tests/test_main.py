@@ -1,6 +1,6 @@
 import pytest
 
-from package.main import addition, subtraction, multiplication
+from package.main import addition, multiplication, subtraction
 
 
 @pytest.mark.parametrize("a, b, c", [
