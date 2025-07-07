@@ -3,8 +3,6 @@ name: Release & QA
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 permissions:
   contents: read
@@ -37,6 +35,11 @@ jobs:
 
     - name: Run Tests
       run: pytest
+
+    - name: Set Git identity
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
 
     - name: Bump version and changelog
       id: bump
