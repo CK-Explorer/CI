@@ -17,4 +17,4 @@ def check_equality(a: int, b: int) -> bool:
     return a==b
 
 def check_inequality(a: int, b: int) -> bool:
-    return a != b
+    return a!=b
