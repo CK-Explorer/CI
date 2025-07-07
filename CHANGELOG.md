@@ -1,3 +1,12 @@
+## v0.3.5 (2025-07-07)
+
+### Fix
+
+- Let's test again
+- let's hope it's working
+- test again
+- testing the workflows if success
+
 ## v0.3.4 (2025-07-07)
 
 ### Fix
