@@ -10,6 +10,15 @@ authors = [{ name = "Your Name", email = "you@example.com" }]
 readme = "README.md"
 requires-python = ">=3.8"
 
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.1.0"
+tag_format = "v$version"
+version_files = [
+  "pyproject.toml",
+  "package/__init__.py"
+]
+
 dependencies = [
     # Add your runtime dependencies here
 ]
@@ -19,6 +28,9 @@ dev = [
     "ruff",
     "mypy",
     "pytest",
+    "commitizen",
+    "build",
+    "twine"
 ]
 
 [tool.pytest.ini_options]
