@@ -1,3 +1,9 @@
+## v0.3.4 (2025-07-07)
+
+### Fix
+
+- checking it's correct again
+
 ## v0.3.3 (2025-07-07)
 
 ### Fix
