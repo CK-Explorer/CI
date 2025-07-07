@@ -1,57 +1,58 @@
-name: Release & QA
+name: QA and Release
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
 
 permissions:
-  contents: write
+  contents: write  # Allow git push
 
 jobs:
-  build:
+  qa:
+    name: QA (Lint, Type Check, Test)
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12"]  # Adjust versions as needed
-
+        python-version: [3.9, 3.10, 3.11, 3.12]
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install ruff mypy pytest
+      - run: ruff my_project tests
+      - run: mypy my_project
+      - run: pytest
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-    
-    - name: Install project with test dependencies
-      run: |
-        pip install -e ".[dev]"
+  release:
+    name: Bump Version & Tag
+    needs: qa
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
-    - name: Run Ruff
-      run: ruff check .
+      - name: Set Git identity
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
 
-    - name: Run Mypy
-      run: mypy package/ tests/
+      - name: Install tools
+        run: pip install commitizen
 
-    - name: Run Tests
-      run: pytest
+      - name: Bump version
+        id: bump
+        run: |
+          if cz bump --yes --check-consistency --changelog; then
+            echo "bump_succeeded=true" >> $GITHUB_OUTPUT
+          else
+            echo "bump_succeeded=false" >> $GITHUB_OUTPUT
+          fi
 
-    - name: Set Git identity
-      run: |
-        git config user.name "GitHub Actions"
-        git config user.email "actions@github.com"
-
-    - name: Bump version and changelog
-      id: bump
-      run: |
-        if cz bump --yes --check-consistency --changelog; then
-          echo "bump_succeeded=true" >> $GITHUB_OUTPUT
-        else
-          echo "No version bump needed."
-          echo "bump_succeeded=false" >> $GITHUB_OUTPUT
-        fi
-
-    - name: Push version and tags
-      if: steps.bump.outputs.bump_succeeded == 'true'
-      run: git push origin main --follow-tags
-      
+      - name: Push tags
+        if: steps.bump.outputs.bump_succeeded == 'true'
+        run: git push origin main --follow-tags
