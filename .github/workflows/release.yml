@@ -30,17 +30,31 @@ jobs:
       - name: Install tools
         run: pip install commitizen
 
-      - name: Bump version
+      - name: Run cz bump
         id: bump
         run: |
-          if cz bump --yes --check-consistency --changelog; then
-            echo "bump_succeeded=true" >> $GITHUB_OUTPUT
-          else
-            echo "bump_succeeded=false" >> $GITHUB_OUTPUT
-          fi
+          VERSION=$(cz bump --yes --check-consistency --changelog | grep -oP 'bump: version \S+ → \K\S+')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+        continue-on-error: false
 
-      - name: Push commit and tag
-        if: steps.bump.outputs.bump_succeeded == 'true'
+      - name: Create bump branch, commit and push
+        env:
+          VERSION: ${{ steps.bump.outputs.version }}
         run: |
-          git push origin main
-          git push origin --tags
+          BRANCH="bump/v${VERSION}"
+          git checkout -b "$BRANCH"
+          git add .
+          git commit -m "chore(release): bump version to v${VERSION}"
+          git push origin "$BRANCH"
+
+      - name: Create Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.bump.outputs.version }}
+        run: |
+          gh pr create \
+            --title "chore(release): v${VERSION}" \
+            --body "Automated version bump and changelog for v${VERSION}" \
+            --base main \
+            --head "bump/v${VERSION}" \
+            --label release
