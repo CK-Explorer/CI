@@ -48,10 +48,7 @@ jobs:
           echo "bump_succeeded=false" >> $GITHUB_OUTPUT
         fi
 
-    - name: Exit if no version bump
-      if: steps.bump.outputs.bump_succeeded == 'false'
-      run: exit 0
-
     - name: Push version and tags
+      if: steps.bump.outputs.bump_succeeded == 'true'
       run: git push origin main --follow-tags
       
