@@ -9,3 +9,6 @@ def multiplication(a: int, b: int) -> int:
 
 def modulus(a: int, b: int) -> int:
     return a%b
+
+def straight_line(a: int, b: int) -> int:
+    return a*b + 10
