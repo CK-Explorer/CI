@@ -6,3 +6,6 @@ def subtraction(a: int, b: int) -> int:
 
 def multiplication(a: int, b: int) -> int:
     return a * b
+
+def power(a: int, b: int) -> int:
+    return a**b
