@@ -1,6 +1,6 @@
 import pytest
 
-from package.main import addition, subtraction
+from package.main import addition, subtraction, multiplication
 
 
 @pytest.mark.parametrize("a, b, c", [
@@ -18,3 +18,11 @@ def test_addition(a: int, b: int, c: int) -> None:
 ])
 def test_subtraction(a: int, b: int, c: int) -> None:
     assert c == subtraction(a,b)
+
+@pytest.mark.parametrize("a, b, c", [
+    (5, 6, 30),
+    (10, 8, 80),
+    (1, 1, 1)
+])
+def test_multiplication(a: int, b: int, c: int) -> None:
+    assert c == multiplication(a,b)
