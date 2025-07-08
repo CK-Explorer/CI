@@ -20,7 +20,7 @@ version_files = [
 ]
 
 dependencies = [
-    requests = "2.20.0"
+    "requests==2.20.0"
 ]
 
 [project.optional-dependencies]
