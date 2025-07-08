@@ -8,7 +8,7 @@ def multiplication(a: int, b: int) -> int:
     return a*b
 
 def modulus(a: int, b: int) -> int:
-    return a%b
+    return a %b
 
 def straight_line(a: int, b: int) -> int:
     return a*b + 10
