@@ -20,7 +20,7 @@ version_files = [
 ]
 
 dependencies = [
-    # Add your runtime dependencies here
+    requests = "2.20.0"
 ]
 
 [project.optional-dependencies]
